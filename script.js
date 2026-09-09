@@ -723,7 +723,7 @@ async function getNextOrderId() {
 }
 
 // ⚠️ Use the SAME topic name you subscribed to in the ntfy app
-const NTFY_TOPIC = "arun1317-lilcocolates";
+const NTFY_TOPIC = "lil_cocolates";
 
 function notifyAdminViaNtfy(order) {
   const message =
