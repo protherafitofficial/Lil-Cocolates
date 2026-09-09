@@ -99,7 +99,7 @@ aboutPillars.forEach(el => pillarObserver.observe(el));
 ══════════════════════════════════════ */
 
 /* Replace with the brand's actual WhatsApp number, country code first, no + or spaces */
-const WHATSAPP_NUMBER = "8903466217";
+const WHATSAPP_NUMBER = "+919363031787";
 
 const MENU_DATA = [
   {
@@ -575,7 +575,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ⚠️ Replace this with your actual business UPI ID
-const BUSINESS_UPI_ID = "lilcocolates@upi";
+const BUSINESS_UPI_ID = "8838631787@axl";
 
 let latestFullOrder = null; // holds the completed order once details are submitted
 
