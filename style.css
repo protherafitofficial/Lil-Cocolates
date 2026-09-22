@@ -2081,3 +2081,14 @@ h1 em {
   opacity: .6;
   cursor: not-allowed;
 }
+
+/* ══ Product availability (controlled from Admin → Products) ══ */
+.menu-item.is-unavailable {
+  opacity: 1;
+}
+.menu-cta.is-disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  background: #ffffff;
+  border-color: #2e1616;
+}
