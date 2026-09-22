@@ -99,7 +99,7 @@ aboutPillars.forEach(el => pillarObserver.observe(el));
 ══════════════════════════════════════ */
 
 /* Replace with the brand's actual WhatsApp number, country code first, no + or spaces */
-const WHATSAPP_NUMBER = "+919363031787";
+const WHATSAPP_NUMBER = "8903466217";
 
 const MENU_DATA = [
   {
@@ -130,7 +130,7 @@ const MENU_DATA = [
         name: "Plain bar",
         note: "1 pc",
         items: [
-          { name: "Plain bar", variants: [{ label: "Dark", price: 180 }, { label: "Milk", price: 145 }, { label: "White", price: 135 }, { label: "Triple flavour", price: 199 }] }
+          { name: "Plain bar", variants: [{ label: "White", price: 135 }, { label: "Milk", price: 145 }, { label: "Dark", price: 180 }, { label: "Triple flavour", price: 199 }] }
         ]
       }
     ]
@@ -143,15 +143,15 @@ const MENU_DATA = [
       {
         name: "Strawberry treat box",
         items: [
-          { name: "Classic — 9 pcs", variants: [{ label: "Dark", price: 980 }, { label: "Milk", price: 950 }, { label: "White", price: 950 }, { label: "Triple flavour", price: 1050 }] },
-          { name: "Petite — 4 pcs", variants: [{ label: "Dark", price: 450 }, { label: "Milk", price: 420 }, { label: "White", price: 420 }] }
+          { name: "Classic — 9 pcs", variants: [{ label: "Milk", price: 950 }, { label: "White", price: 950 }, { label: "Dark", price: 980 }, { label: "Triple flavour", price: 1050 }] },
+          { name: "Petite — 4 pcs", variants: [{ label: "Milk", price: 420 }, { label: "White", price: 420 }, { label: "Dark", price: 450 }] }
         ]
       },
       {
         name: "Pomegranate treat box",
         items: [
-          { name: "Classic — 6 pcs", variants: [{ label: "Dark", price: 550 }, { label: "Milk", price: 520 }, { label: "White", price: 520 }, { label: "Triple flavour", price: 580 }] },
-          { name: "Petite — 4 pcs", variants: [{ label: "Dark", price: 400 }, { label: "Milk", price: 380 }, { label: "White", price: 360 }] }
+          { name: "Classic — 6 pcs", variants: [{ label: "Milk", price: 520 }, { label: "White", price: 520 }, { label: "Dark", price: 550 }, { label: "Triple flavour", price: 580 }] },
+          { name: "Petite — 4 pcs", variants: [{ label: "White", price: 360 }, { label: "Milk", price: 380 },  { label: "Dark", price: 400 }] }
         ]
       }
     ]
@@ -165,7 +165,7 @@ const MENU_DATA = [
       {
         name: "Crown royale",
         items: [
-          { name: "Iconic crown", note: "Single flavour selection", variants: [{ label: "Dark", price: 4199 }, { label: "Milk", price: 3799 }, { label: "White", price: 3999 }] },
+          { name: "Iconic crown", note: "Single flavour selection", variants: [{ label: "Milk", price: 3799 }, { label: "White", price: 3999 }, { label: "Dark", price: 4199 }] },
           { name: "Classic crown", note: "Dual flavour · choose an arrangement", variants: [{ label: "White – Milk – White", price: 3699 }, { label: "Milk – White – Milk", price: 3699 }, { label: "Dark – Milk – Dark", price: 3699 }, { label: "Milk – Dark – Milk", price: 3699 }] },
           { name: "Signature crown", note: "Triple flavour", variants: [{ label: "Dark – White – Milk", price: 3899 }] }
         ]
@@ -174,8 +174,8 @@ const MENU_DATA = [
         name: "Bouquet",
         note: "Dark · Milk · White",
         items: [
-          { name: "Signature bouquet", variants: [{ label: "Dark", price: 1299 }, { label: "Milk", price: 1199 }, { label: "White", price: 1299 }] },
-          { name: "Classic bouquet", variants: [{ label: "Dark", price: 2599 }, { label: "Milk", price: 2399 }, { label: "White", price: 2199 }] },
+          { name: "Signature bouquet", variants: [{ label: "Milk", price: 1199 }, { label: "White", price: 1299 }, { label: "Dark", price: 1299 }] },
+          { name: "Classic bouquet", variants: [{ label: "White", price: 2199 }, { label: "Milk", price: 2399 }, { label: "Dark", price: 2599 }] },
           { name: "Petite bouquet", variants: [{ label: "Dark", price: 1299 },{label: "Milk", price: 1299}, {label: "White", price: 1299}] }
         ]
       }
@@ -192,7 +192,7 @@ const MENU_DATA = [
         name: "Gift box",
         note: "Roses available in red, baby pink, blue, or white",
         items: [
-          { name: "Classic box", note: "Single flavour selection", variants: [{ label: "Dark", price: 2699 }, { label: "Milk", price: 2499 }, { label: "White", price: 2399 }] },
+          { name: "Classic box", note: "Single flavour selection", variants: [{ label: "White", price: 2399 }, { label: "Milk", price: 2499 },  { label: "Dark", price: 2699 }] },
           { name: "Blend box", note: "Dual flavour selection", variants: [{ label: "Dark and milk", price: 2399 }, { label: "Dark and white", price: 2499 }] },
           { name: "Signature box", note: "Triple flavour", variants: [{ label: "Standard", price: 3299 }] }
         ]
