@@ -13,7 +13,9 @@ import {
   doc,
   runTransaction,
   setDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -37,5 +39,7 @@ window.firebaseUtils = {
   doc,
   runTransaction,
   setDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  onSnapshot
 };
