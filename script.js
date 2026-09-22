@@ -100,7 +100,7 @@ aboutPillars.forEach(el => pillarObserver.observe(el));
 
 /* Replace with the brand's actual WhatsApp number, country code first, no + or spaces */
 const WHATSAPP_NUMBER = "8903466217";
-
+let productAvailability = {}; // key → true/false, loaded from Firestore
 const MENU_DATA = [
   {
     id: "regulars",
@@ -241,7 +241,8 @@ function renderMenuContent() {
 
   contentEl.innerHTML = cat.groups.map(group => {
     const itemsHtml = group.items.map((item, idxInGroup) => {
-      const key = menuItemKey(cat.id, group.name, item.name);
+       const key = menuItemKey(cat.id, group.name, item.name);
+      const isUnavailable = productAvailability[key] === false;
       if (!(key in menuSelections)) menuSelections[key] = 0;
       const selectedIdx = menuSelections[key];
       const variant = item.variants[selectedIdx];
@@ -288,9 +289,10 @@ function renderMenuContent() {
         `;
       }
 
-      const itemClasses = ["menu-item"];
+       const itemClasses = ["menu-item"];
       if (cat.badge) itemClasses.push("is-luxury");
       if (cat.valentine) itemClasses.push("is-valentine");
+      if (isUnavailable) itemClasses.push("is-unavailable");
 
       return `
         <div class="${itemClasses.join(" ")}" data-item-key="${key}">
@@ -312,7 +314,10 @@ function renderMenuContent() {
                   ${hasFlavours ? flavourDropdownHtml : ""}
                   ${!hasMultiple && !hasFlavours ? `<span></span>` : ""}
                 </div>
-                <button class="menu-cta" data-order-key="${key}">Order <i class="bi bi-arrow-right"></i></button>
+                ${isUnavailable
+                  ? `<button class="menu-cta is-disabled" disabled>Not Available</button>`
+                  : `<button class="menu-cta" data-order-key="${key}">Order <i class="bi bi-arrow-right"></i></button>`
+                }
               </div>
             </div>
           </div>
@@ -446,6 +451,30 @@ if (document.getElementById("menuTabs")) {
   renderMenuTabs();
   renderMenuContent();
 }
+
+/* ══ Live product availability — synced from admin's Products page ══ */
+function waitForFirebaseSite() {
+  return new Promise((resolve) => {
+    const check = () => {
+      if (window.firebaseDb && window.firebaseUtils) resolve();
+      else setTimeout(check, 50);
+    };
+    check();
+  });
+}
+
+waitForFirebaseSite().then(() => {
+  const { collection, onSnapshot } = window.firebaseUtils;
+  const db = window.firebaseDb;
+
+  onSnapshot(collection(db, "productAvailability"), (snapshot) => {
+    productAvailability = {};
+    snapshot.forEach(docSnap => {
+      productAvailability[docSnap.id] = docSnap.data().available;
+    });
+    if (document.getElementById("menuTabs")) renderMenuContent();
+  });
+});
 
 /* ── Close variant dropdowns on outside click / Escape ── */
 document.addEventListener("click", (e) => {
