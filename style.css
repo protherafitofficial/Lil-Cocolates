@@ -2092,3 +2092,10 @@ h1 em {
   background: #ffffff;
   border-color: #2e1616;
 }
+
+/* ══ Rose colour availability (controlled from Admin → Products) ══ */
+.order-chip.is-unavailable {
+  opacity: .35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
