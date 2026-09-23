@@ -101,6 +101,7 @@ aboutPillars.forEach(el => pillarObserver.observe(el));
 /* Replace with the brand's actual WhatsApp number, country code first, no + or spaces */
 const WHATSAPP_NUMBER = "8903466217";
 let productAvailability = {}; // key → true/false, loaded from Firestore
+let roseAvailability = {};    // rose name → true/false, loaded from Firestore
 const MENU_DATA = [
   {
     id: "regulars",
@@ -474,6 +475,14 @@ waitForFirebaseSite().then(() => {
     });
     if (document.getElementById("menuTabs")) renderMenuContent();
   });
+
+  onSnapshot(collection(db, "roseAvailability"), (snapshot) => {
+    roseAvailability = {};
+    snapshot.forEach(docSnap => {
+      roseAvailability[docSnap.id] = docSnap.data().available;
+    });
+    applyRoseAvailability(); // live-update chips if the order modal is open right now
+  });
 });
 
 /* ── Close variant dropdowns on outside click / Escape ── */
@@ -524,11 +533,23 @@ let selectedRoseValue      = "Red rose";       // default
 function setupChipGroup(groupEl, onSelect) {
   groupEl.addEventListener("click", (e) => {
     const chip = e.target.closest(".order-chip");
-    if (!chip) return;
+    if (!chip || chip.classList.contains("is-unavailable")) return;
     groupEl.querySelectorAll(".order-chip").forEach(c => c.classList.remove("selected"));
     chip.classList.add("selected");
     onSelect(chip.dataset.value);
   });
+}
+
+// Dims out rose chips marked unavailable by the admin, and returns
+// the first still-available rose (used to pick a safe default).
+function applyRoseAvailability() {
+  let firstAvailable = null;
+  orderRoseChips.querySelectorAll(".order-chip").forEach(chip => {
+    const isUnavailable = roseAvailability[chip.dataset.value] === false;
+    chip.classList.toggle("is-unavailable", isUnavailable);
+    if (!isUnavailable && !firstAvailable) firstAvailable = chip.dataset.value;
+  });
+  return firstAvailable || "Red rose"; // fallback if somehow all are marked unavailable
 }
 
 setupChipGroup(orderNameplateChips, (val) => { selectedNameplateValue = val; });
@@ -564,8 +585,9 @@ function openOrderModal(data) {
     selectedNameplateValue = "Happy Birthday";
   }
   if (data.categoryId === "valentine") {
-    resetChipGroup(orderRoseChips, "Red rose");
-    selectedRoseValue = "Red rose";
+    const defaultRose = applyRoseAvailability();
+    resetChipGroup(orderRoseChips, defaultRose);
+    selectedRoseValue = defaultRose;
   }
 
   if (orderModalOverlay) {
