@@ -202,6 +202,24 @@ const MENU_DATA = [
   }
 ];
 
+/* ══ Nut choices — only for REGULARS → Nut collection ══ */
+const NUT_CHOICES = [
+  "Almond",
+  "Walnut",
+  "Hazelnut",
+  "Cashew",
+  "Almond + Walnut",
+  "Almond + Hazelnut",
+  "Almond + Cashew",
+  "Walnut + Hazelnut",
+  "Walnut + Cashew",
+  "Hazelnut + Cashew",
+  "Almond + Walnut + Hazelnut",
+  "Almond + Walnut + Cashew",
+  "Walnut + Hazelnut + Cashew",
+  "Almond + Walnut + Hazelnut + Cashew"
+];
+
 let menuActiveCategory = MENU_DATA[0].id;
 const menuSelections = {};
 const menuFlavourSelections = {};
@@ -403,7 +421,7 @@ function attachMenuHandlers(cat) {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       const key = btn.dataset.orderKey;
-      const { item } = menuFindGroupAndItemByKey(cat, key);
+      const { group, item } = menuFindGroupAndItemByKey(cat, key);
       const variant = item.variants[menuSelections[key]];
 
       let flavourLabel = "";
@@ -418,7 +436,8 @@ function attachMenuHandlers(cat) {
         pcsLabel: variant.label,
         flavour: flavourLabel,
         amount: variant.price,
-        categoryId: cat.id
+        categoryId: cat.id,
+        showNutChoice: cat.id === "regulars" && group.name === "Nut collection"
       });
     });
   });
@@ -526,9 +545,16 @@ const orderNameplateField = document.getElementById("orderNameplateField");
 const orderNameplateChips = document.getElementById("orderNameplateChips");
 const orderRoseField      = document.getElementById("orderRoseField");
 const orderRoseChips      = document.getElementById("orderRoseChips");
+const orderNutField       = document.getElementById("orderNutField");
+const orderNutDropdown    = document.getElementById("orderNutDropdown");
+const orderNutToggle      = document.getElementById("orderNutToggle");
+const orderNutLabel       = document.getElementById("orderNutLabel");
+const orderNutMenu        = document.getElementById("orderNutMenu");
+
 
 let selectedNameplateValue = "Happy Birthday"; // default
 let selectedRoseValue      = "Red rose";       // default
+let selectedNutChoice      = NUT_CHOICES[0];   // default → "Almond"
 
 function setupChipGroup(groupEl, onSelect) {
   groupEl.addEventListener("click", (e) => {
@@ -555,6 +581,49 @@ function applyRoseAvailability() {
 setupChipGroup(orderNameplateChips, (val) => { selectedNameplateValue = val; });
 setupChipGroup(orderRoseChips, (val) => { selectedRoseValue = val; });
 
+// ✅ NEW (same idathula paste pannunga)
+// ── Nut choice dropdown ──
+function setNutChoice(value) {
+  selectedNutChoice = value;
+  orderNutLabel.textContent = value;
+  orderNutMenu.querySelectorAll(".nut-dropdown-option").forEach(o => {
+    const isSel = o.dataset.value === value;
+    o.classList.toggle("selected", isSel);
+    o.setAttribute("aria-selected", isSel);
+  });
+}
+
+function closeNutDropdown() {
+  orderNutDropdown.classList.remove("open");
+  orderNutToggle.setAttribute("aria-expanded", "false");
+}
+
+orderNutMenu.innerHTML = NUT_CHOICES.map(n =>
+  `<div class="nut-dropdown-option" role="option" data-value="${n}">${n}</div>`
+).join("");
+setNutChoice(NUT_CHOICES[0]);
+
+orderNutToggle.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const isOpen = orderNutDropdown.classList.toggle("open");
+  orderNutToggle.setAttribute("aria-expanded", isOpen);
+  if (isOpen) {
+    setTimeout(() => orderNutMenu.scrollIntoView({ block: "nearest", behavior: "smooth" }), 60);
+  }
+});
+
+orderNutMenu.addEventListener("click", (e) => {
+  const opt = e.target.closest(".nut-dropdown-option");
+  if (!opt) return;
+  e.stopPropagation();
+  setNutChoice(opt.dataset.value);
+  closeNutDropdown();
+});
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".nut-dropdown")) closeNutDropdown();
+});
+
 function resetChipGroup(groupEl, defaultValue) {
   groupEl.querySelectorAll(".order-chip").forEach(c => {
     c.classList.toggle("selected", c.dataset.value === defaultValue);
@@ -579,6 +648,12 @@ function openOrderModal(data) {
   // Show category-specific customization: nameplate for Luxury, rose colour for Valentine's
   orderNameplateField.style.display = data.categoryId === "luxury" ? "flex" : "none";
   orderRoseField.style.display = data.categoryId === "valentine" ? "flex" : "none";
+  // Nut choice: only for Regulars → Nut collection
+  orderNutField.style.display = data.showNutChoice ? "flex" : "none";
+  if (data.showNutChoice) {
+    setNutChoice(NUT_CHOICES[0]);
+    closeNutDropdown();
+  }
 
   if (data.categoryId === "luxury") {
     resetChipGroup(orderNameplateChips, "Happy Birthday");
@@ -660,6 +735,7 @@ if (orderDetailsForm) {
       customerPincode,
       nameplateDesign: currentOrderData.categoryId === "luxury" ? selectedNameplateValue : null,
       roseColour: currentOrderData.categoryId === "valentine" ? selectedRoseValue : null,
+      nutChoice: currentOrderData.showNutChoice ? selectedNutChoice : null,
       tempRef: "TMP" + Date.now() // internal only, real Order ID assigned when order is actually placed
     };
 
@@ -775,10 +851,13 @@ async function getNextOrderId() {
 
 // ⚠️ Use the SAME topic name you subscribed to in the ntfy app
 const NTFY_TOPIC = "lil_cocolates";
+//const NTFY_TOPIC = "arun1317-lilcocolates";
 
 function notifyAdminViaNtfy(order) {
+  // ✅ NEW (oru line mattum add — "Customer" line-ku munnadi)
   const message =
     `${order.itemName} (${order.pcsLabel}) — ₹${order.amount}\n` +
+    (order.nutChoice ? `Nuts: ${order.nutChoice}\n` : "") +
     `Customer: ${order.customerName} | ${order.customerPhone}`;
 
   fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
@@ -829,6 +908,7 @@ if (orderPlaceOrderBtn) {
         categoryId: latestFullOrder.categoryId,
         nameplateDesign: latestFullOrder.nameplateDesign,
         roseColour: latestFullOrder.roseColour,
+        nutChoice: latestFullOrder.nutChoice,
         customerName: latestFullOrder.customerName,
         customerPhone: latestFullOrder.customerPhone,
         customerAddress: latestFullOrder.customerAddress,
