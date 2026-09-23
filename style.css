@@ -2099,3 +2099,97 @@ h1 em {
   cursor: not-allowed;
   text-decoration: line-through;
 }
+
+/* ══ Nut choice dropdown (Order modal) ══ */
+.nut-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.nut-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--menu-gold-soft, #C9A27E);
+  color: var(--menu-ink, #2B1810);
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 11px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.nut-dropdown-toggle:hover {
+  border-color: var(--menu-gold, #9C6B32);
+}
+.nut-dropdown-toggle svg {
+  width: 9px;
+  height: 6px;
+  flex-shrink: 0;
+  color: var(--menu-gold, #9C6B32);
+  transition: transform .25s ease;
+}
+.nut-dropdown.open .nut-dropdown-toggle {
+  border-color: var(--menu-gold, #9C6B32);
+  box-shadow: 0 0 0 3px rgba(156,107,50,.1);
+}
+.nut-dropdown.open .nut-dropdown-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* overrides the uppercase style that ".order-field span" applies */
+.nut-dropdown .nut-dropdown-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--menu-ink, #2B1810);
+}
+
+.nut-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid var(--menu-line, #E6D9C9);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px -12px rgba(43,24,16,.25);
+  padding: 6px;
+  z-index: 30;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
+}
+.nut-dropdown.open .nut-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nut-dropdown-option {
+  padding: 9px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--menu-ink-soft, #7A6650);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.nut-dropdown-option:hover {
+  background: var(--menu-hover, rgba(156,107,50,.055));
+  color: var(--menu-ink, #2B1810);
+}
+.nut-dropdown-option.selected {
+  background: var(--menu-gold, #9C6B32);
+  color: #fff;
+  font-weight: 600;
+}
