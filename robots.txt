@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lil-cocolates.vercel.app/sitemap.xml
