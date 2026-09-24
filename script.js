@@ -165,6 +165,7 @@ const MENU_DATA = [
     groups: [
       {
         name: "Crown royale",
+        note: " Arrangements of fresh coco-strawberries ",
         items: [
           { name: "Iconic crown", note: "Single flavour selection", variants: [{ label: "Milk", price: 3799 }, { label: "White", price: 3999 }, { label: "Dark", price: 4199 }] },
           { name: "Classic crown", note: "Dual flavour · choose an arrangement", variants: [{ label: "White – Milk – White", price: 3699 }, { label: "Milk – White – Milk", price: 3699 }, { label: "Dark – Milk – Dark", price: 3699 }, { label: "Milk – Dark – Milk", price: 3699 }] },
@@ -173,7 +174,7 @@ const MENU_DATA = [
       },
       {
         name: "Bouquet",
-        note: "Dark · Milk · White",
+        note: " Fresh Coco-Strawberry Bouquets Discover our Signature, Rose-Accented Classic, and Petite designs ",
         items: [
           { name: "Signature bouquet", variants: [{ label: "Milk", price: 1199 }, { label: "White", price: 1299 }, { label: "Dark", price: 1299 }] },
           { name: "Classic bouquet", variants: [{ label: "White", price: 2199 }, { label: "Milk", price: 2399 }, { label: "Dark", price: 2599 }] },
