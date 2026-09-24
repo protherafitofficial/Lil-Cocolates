@@ -437,7 +437,9 @@ function attachMenuHandlers(cat) {
         flavour: flavourLabel,
         amount: variant.price,
         categoryId: cat.id,
-        showNutChoice: cat.id === "regulars" && group.name === "Nut collection"
+        showNutChoice: cat.id === "regulars" && group.name === "Nut collection",
+        showRoseChoice: cat.id === "valentine" ||
+         (cat.id === "luxury" && group.name === "Bouquet" && item.name !== "Signature bouquet")
       });
     });
   });
@@ -647,7 +649,7 @@ function openOrderModal(data) {
 
   // Show category-specific customization: nameplate for Luxury, rose colour for Valentine's
   orderNameplateField.style.display = data.categoryId === "luxury" ? "flex" : "none";
-  orderRoseField.style.display = data.categoryId === "valentine" ? "flex" : "none";
+  orderRoseField.style.display = data.showRoseChoice ? "flex" : "none";
   // Nut choice: only for Regulars → Nut collection
   orderNutField.style.display = data.showNutChoice ? "flex" : "none";
   if (data.showNutChoice) {
@@ -659,7 +661,7 @@ function openOrderModal(data) {
     resetChipGroup(orderNameplateChips, "Happy Birthday");
     selectedNameplateValue = "Happy Birthday";
   }
-  if (data.categoryId === "valentine") {
+  if (data.showRoseChoice) {
     const defaultRose = applyRoseAvailability();
     resetChipGroup(orderRoseChips, defaultRose);
     selectedRoseValue = defaultRose;
@@ -734,7 +736,7 @@ if (orderDetailsForm) {
       customerAddress,
       customerPincode,
       nameplateDesign: currentOrderData.categoryId === "luxury" ? selectedNameplateValue : null,
-      roseColour: currentOrderData.categoryId === "valentine" ? selectedRoseValue : null,
+      roseColour: currentOrderData.showRoseChoice ? selectedRoseValue : null,
       nutChoice: currentOrderData.showNutChoice ? selectedNutChoice : null,
       tempRef: "TMP" + Date.now() // internal only, real Order ID assigned when order is actually placed
     };
