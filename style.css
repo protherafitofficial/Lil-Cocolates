@@ -2193,3 +2193,13 @@ h1 em {
   color: #fff;
   font-weight: 600;
 }
+
+.nut-dropdown-option.is-unavailable {
+  opacity: .35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.nut-dropdown-option.is-unavailable:hover {
+  background: transparent;
+  color: var(--menu-ink-soft, #7A6650);
+}
