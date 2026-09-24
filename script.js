@@ -99,7 +99,7 @@ aboutPillars.forEach(el => pillarObserver.observe(el));
 ══════════════════════════════════════ */
 
 /* Replace with the brand's actual WhatsApp number, country code first, no + or spaces */
-const WHATSAPP_NUMBER = "9363031787";
+const WHATSAPP_NUMBER = "919363031787";
 let productAvailability = {}; // key → true/false, loaded from Firestore
 let roseAvailability = {};    // rose name → true/false, loaded from Firestore
 let nutAvailability = {};     // nut choice → true/false, loaded from Firestore
