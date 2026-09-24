@@ -102,6 +102,8 @@ aboutPillars.forEach(el => pillarObserver.observe(el));
 const WHATSAPP_NUMBER = "8903466217";
 let productAvailability = {}; // key → true/false, loaded from Firestore
 let roseAvailability = {};    // rose name → true/false, loaded from Firestore
+let nutAvailability = {};     // nut choice → true/false, loaded from Firestore
+
 const MENU_DATA = [
   {
     id: "regulars",
@@ -505,6 +507,16 @@ waitForFirebaseSite().then(() => {
     });
     applyRoseAvailability(); // live-update chips if the order modal is open right now
   });
+  
+  onSnapshot(collection(db, "nutAvailability"), (snapshot) => {
+    nutAvailability = {};
+    snapshot.forEach(docSnap => {
+      nutAvailability[docSnap.id] = docSnap.data().available;
+    });
+    const firstNut = applyNutAvailability(); // live-update dropdown if the order modal is open right now
+    // if the nut currently selected just became unavailable, switch to the first available one
+    if (nutAvailability[selectedNutChoice] === false) setNutChoice(firstNut);
+  });
 });
 
 /* ── Close variant dropdowns on outside click / Escape ── */
@@ -606,6 +618,19 @@ orderNutMenu.innerHTML = NUT_CHOICES.map(n =>
 ).join("");
 setNutChoice(NUT_CHOICES[0]);
 
+// Dims nut options marked unavailable by the admin, and returns
+// the first still-available option (used to pick a safe default).
+function applyNutAvailability() {
+  let firstAvailable = null;
+  orderNutMenu.querySelectorAll(".nut-dropdown-option").forEach(opt => {
+    const isUnavailable = nutAvailability[opt.dataset.value] === false;
+    opt.classList.toggle("is-unavailable", isUnavailable);
+    opt.setAttribute("aria-disabled", isUnavailable);
+    if (!isUnavailable && !firstAvailable) firstAvailable = opt.dataset.value;
+  });
+  return firstAvailable || NUT_CHOICES[0]; // fallback if somehow all are marked unavailable
+}
+
 orderNutToggle.addEventListener("click", (e) => {
   e.stopPropagation();
   const isOpen = orderNutDropdown.classList.toggle("open");
@@ -617,7 +642,7 @@ orderNutToggle.addEventListener("click", (e) => {
 
 orderNutMenu.addEventListener("click", (e) => {
   const opt = e.target.closest(".nut-dropdown-option");
-  if (!opt) return;
+  if (!opt || opt.classList.contains("is-unavailable")) return;
   e.stopPropagation();
   setNutChoice(opt.dataset.value);
   closeNutDropdown();
@@ -654,7 +679,7 @@ function openOrderModal(data) {
   // Nut choice: only for Regulars → Nut collection
   orderNutField.style.display = data.showNutChoice ? "flex" : "none";
   if (data.showNutChoice) {
-    setNutChoice(NUT_CHOICES[0]);
+    setNutChoice(applyNutAvailability());
     closeNutDropdown();
   }
 
